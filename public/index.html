@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no viewport-fit=cover" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Not just a leader, but a king of memes & a billionaire 💰 Tap2Earn now!" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+  <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+  <title>Tiger</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+
+<body>
+  <div id="root"></div>
+
+</body>
+<script>
+  let tg = window.Telegram.WebApp
+  tg.expand()
+  window.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false })
+
+  Telegram.WebApp.ready()
+
+  const initData = Telegram.WebApp.initDataUnsafe
+
+  if (initData.user) {
+    fetch('/save_user_info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(initData)
+    })
+  } else {
+    console.log('No user data available')
+  }
+
+  // margin-top 100px & padding=bottom 100px
+  const overflow = 100
+  document.body.style.overflowY = 'hidden'
+  document.body.style.marginTop = `${overflow}px`
+  document.body.style.height = window.innerHeight + overflow + 'px'
+  document.body.style.paddingBottom = `${overflow}px`
+  window.scrollTo(0, overflow)
+
+  const scrollableEl = document.querySelector('.scrollable')
+  let ts
+  const onTouchStart = (e) => {
+    ts = e.touches[0].clientY
+  }
+  const onTouchMove = (e) => {
+    if (scrollableEl) {
+      const scroll = scrollableEl.scrollTop
+      const te = e.changedTouches[0].clientY
+      if (scroll <= 0 && ts < te) {
+        e.preventDefault()
+      }
+    } else {
+      e.preventDefault()
+    }
+  }
+  document.documentElement.addEventListener('touchstart', onTouchStart, { passive: false })
+  document.documentElement.addEventListener('touchmove', onTouchMove, { passive: false });
+</script>
+
+</html>

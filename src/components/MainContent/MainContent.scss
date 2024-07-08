@@ -1,0 +1,199 @@
+.mainContent {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  &__gameContent {
+    top: 45px;
+    width: 100%;
+    height: 100%;
+  }
+  &__gameContentBox {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+  }
+  &__gamePaused {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin: auto 0px;
+      h4 {
+        font-size: 22px;
+      }   
+      p {
+        margin-top: 20px;
+        font-size: 16px;
+        text-align: center;
+        align-content: center;
+      }      
+  }
+  &__header {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  &__totalCoins {   
+    justify-content: center;
+    display: flex;    
+  }
+ &__totalCoinsBox {
+   backdrop-filter: blur(24px);
+   background: var(--altBG);
+   border: 2px solid var(--mainColor);
+   border-radius: 77px;
+   display: flex;
+   align-items: center;
+   width: fit-content;
+   align-self: center;
+   justify-content: center;
+   padding: 10px 14px;
+  }
+  &__totalCoinsImg {
+   display: flex;
+   align-items: center;
+   margin-right: 10px;
+   width: 28px;
+   height: 28px;
+   border: 2px solid var(--mainColor);
+   border-radius: 62px;
+   background: var(--altBG);
+   img {
+    width: 100%;
+   }
+  }
+  &__totalCoinsAmount {
+   display: flex;
+   align-items: center;
+   span {
+   font-weight: 400;
+   font-size: 28px;
+   line-height: 100%;
+   letter-spacing: 0.01em;
+   color: var(--mainColor);
+   }
+ }
+ &__energyContainer {
+  display: flex;
+  flex-direction: row;
+  font-weight: 600;
+  font-size: 22px;
+  color: var(--altText);
+  margin-top: 15px;
+  align-items: center;
+  font-size: 18px;
+  justify-content: center;
+  .energyCount {
+    margin-left: 7px;
+   }
+  }
+&__energyValue {
+  display: flex;
+  flex-direction: row;
+ }
+  &__imageContainer {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    align-items: center;  
+    justify-content: center;
+    aspect-ratio: 466/685;
+    img {        
+    position: absolute;
+    top: -105px;
+    left: -55px;
+    width: 305px;
+    height: 495px;
+    } 
+    @media (max-height: 730px) {
+      margin: 0;
+    }
+  }
+  &__clickArea {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 15;
+    background: transparent;
+    width: 100%;
+    height: 100%;
+  }
+  &__footer {
+    display: flex;
+    flex-direction: column;
+  }
+  &__sessionCoins {
+    position: relative;
+    display: flex;
+    align-self: center;
+    align-items: center;
+    justify-content: center;
+		background: var(--altBG);
+    font-family: var(--altText);
+    position: relative;
+    border: 1px solid var(--mainColor);
+    border-radius: 12px;
+    padding: 8px 18px;
+    gap: 12px;
+    width: fit-content;
+    order: 4;
+   span {
+    font-size: 12px;
+    line-height: 130%;
+    text-align: center;
+    color: var(--mainColor);
+    font-weight: 600;
+  }
+  @media (max-height: 730px) {
+    margin-bottom: 1.25rem;
+  }
+ }
+ &__sessionCoins-img {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--mainColor);
+  border-radius: 62px;
+  img {
+    width: 100%;
+   }
+ }
+ &__sessionCoins-text {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+}
+ &__sessionCoins-coins {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 100%;
+  text-align: center;
+  color: var(--mainColor);
+ }
+ &__energyHint {
+  margin-top: 15px;
+  padding: 0 1.25rem;
+  order: 5;
+  display: block;
+  padding-bottom: 30px;
+  p {
+   font-weight: 500;
+   font-size: 12px;
+   line-height: 130%;
+   color: var(--mainColor);
+   text-align: center;
+  }
+  @media (max-height: 730px) {
+   display: none;
+  }
+ }
+}
