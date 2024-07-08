@@ -1,18 +1,15 @@
-import bcrypt from 'bcryptjs'
-import moment from 'moment-timezone'
-import React, { useEffect, useState } from 'react'
+import bcrypt from 'bcryptjs';
+import React, { useEffect, useState } from 'react';
 import {
-	useChangeWalletMutation,
 	usePassDailyMutation,
 	usePassPartnersMutation,
 	usePassTaskMutation,
-	useSetWalletMutation,
-} from '../../services/phpService'
+} from '../../services/phpService';
 
-import cross from '../../img/cross.svg'
-import tigerCoin from '../../img/tigran_circle.webp'
-import Modal from '../Modal/Modal'
-import './Footer.scss'
+import cross from '../../img/cross.svg';
+import tigerCoin from '../../img/tigran_circle.webp';
+import Modal from '../Modal/Modal';
+import './Footer.scss';
 
 const Footer = ({ user }) => {
 	const tg = window.Telegram.WebApp;
@@ -22,11 +19,6 @@ const Footer = ({ user }) => {
 	const [tasksDaily, setTasksDaily] = useState(false);
 	const [tasksPartn, setTasksPartn] = useState(false);
 	const [passTask] = usePassTaskMutation();
-	const [setWallet] = useSetWalletMutation();
-	const [changeWallet] = useChangeWalletMutation();
-	const [walletVaL, setWalletVal] = useState('');
-	const [walletInputDisabled, setWalletInputDisabled] = useState(false);
-	const [resetBtnDisabled, setResetBtnDisabled] = useState(false); // false?
 	const [activeTab, setActiveTab] = useState(0);
 	const [passDaily] = usePassDailyMutation();
 	const [passPartners] = usePassPartnersMutation();
@@ -111,47 +103,6 @@ const Footer = ({ user }) => {
 	const now = new Date();
 	const dateStringWithTime = now.toLocaleString('en-GB', options);
 
-	useEffect(() => {
-		if (!user?.wallet_address) {
-			toggleFirst();
-		} else {
-			toggleSecond();
-			setWalletVal(user?.wallet_address);
-		}
-	}, [user]);
-
-	useEffect(() => {
-		if (user) {
-			const updateGameStatus = () => {
-				// Get the current time in Frankfurt time zone ('Etc/GMT-3')
-				const currentTimeStamp = moment.tz('UTC').unix();
-				const remainingTime = user?.update_wallet_at - currentTimeStamp;
-				if (remainingTime >= 1) {
-					if (remainingTime <= 0 || user.update_wallet_at === null) {
-						setResetBtnDisabled(false);
-					} else {
-						setResetBtnDisabled(true);
-						setWalletInputDisabled(true);
-					}
-				}
-			};
-
-			const timer = setInterval(() => {
-				updateGameStatus();
-			}, 1000);
-
-			return () => {
-				clearInterval(timer);
-			};
-		}
-	}, [user]);
-
-	const resetWalletEnabler = () => {
-		setWalletInputDisabled(false);
-		setWalletVal('');
-		toggleFirst();
-	};
-
 	const tasksBtn = () => {
 		fadeShow();
 		setTimeout(() => {
@@ -186,59 +137,11 @@ const Footer = ({ user }) => {
 		if (bgTag) bgTag.classList.remove('h100');
 	};
 
-	const walletSubmitHandler = () => {
-		if (!user?.wallet_address) {
-			submitWallet();
-		} else {
-			resetWallet();
-		}
-	};
-
 	const blurPopupTasks = () => {
 		const popupTasks = document.getElementById('popupTasks');
 		if (popupTasks) popupTasks.classList.add('show-blur');
 		const footerTag = document.getElementById('footer');
 		if (footerTag) footerTag.classList.add('show-blur');
-	};
-
-	const submitWallet = async () => {
-		if (walletVaL) {
-			try {
-				const res = await setWallet({
-					token: await bcrypt.hash(secretKey + dateStringWithTime, 10),
-					wallet_address: walletVaL,
-					id_telegram: user?.id_telegram,
-				}).unwrap();
-				setResetBtnDisabled(true);
-				setWalletInputDisabled(true);
-				openModal('green', 'Wallet submitted successfully.', 'Return');
-				blurPopupTasks();
-				toggleSecond();
-			} catch (e) {
-				openModal('red', 'This wallet is already in use.', 'Return');
-				blurPopupTasks();
-			}
-		}
-	};
-
-	const resetWallet = async () => {
-		if (walletVaL) {
-			try {
-				const res = await changeWallet({
-					token: await bcrypt.hash(secretKey + dateStringWithTime, 10),
-					wallet_address: walletVaL,
-					user_id: user?.id,
-				}).unwrap();
-				setResetBtnDisabled(true);
-				setWalletInputDisabled(true);
-				openModal('green', 'Wallet changed successfully.', 'Return');
-				blurPopupTasks();
-				toggleSecond();
-			} catch (e) {
-				openModal('red', 'This wallet is already in use.', 'Return');
-				blurPopupTasks();
-			}
-		}
 	};
 
 	const passDailyHandler = async (taskId, link) => {
@@ -606,98 +509,6 @@ const Footer = ({ user }) => {
 								</div>
 							</div>
 							<div className={`popupTasks__tasks ${activeTab === 0 ? 'active' : ''}`}>
-								<div className='popupTasks__walletTask'>
-									{inputFirst && (
-										<>
-											<div className='popupTasks__walletTask-title'>
-												<span>Current wallet</span>
-											</div>
-											<div className='popupTasks__walletTask-input'>
-												<input
-													type='text'
-													placeholder='Enter Solana Wallet Address'
-													value={walletVaL}
-													onChange={(e) => setWalletVal(e.target.value)}
-													disabled={walletInputDisabled === true}
-												/>
-												<button
-													className='popupTasks__walletTask-inputBtn'
-													onClick={walletSubmitHandler}
-													// disabled={walletInputDisabled === true}
-												>
-													<svg
-														width='24'
-														height='24'
-														viewBox='0 0 24 24'
-														fill='none'
-														xmlns='http://www.w3.org/2000/svg'
-													>
-														<g clip-path='url(#clip0_438_3037)'>
-															<path
-																d='M21.5966 4.90886C19.3742 2.00582 15.9949 0.34082 12.3252 0.34082C9.74522 0.34082 7.2987 1.16969 5.24998 2.73793C4.50871 3.30544 3.83811 3.96166 3.2543 4.68594L2.73374 1.73736C2.67675 1.41491 2.36892 1.19925 2.04678 1.25656L0.48984 1.53135C0.334977 1.5587 0.197346 1.64645 0.107148 1.77523C0.0169488 1.90408 -0.0183086 2.06337 0.00904354 2.21824L1.2459 9.22457C1.29673 9.51217 1.54685 9.71454 1.82907 9.71454C1.8633 9.71454 1.898 9.71154 1.93286 9.70537L8.93928 8.46852C9.26173 8.4116 9.47699 8.10408 9.42008 7.78163L9.14521 6.22469C9.11786 6.06983 9.03019 5.9322 8.90133 5.842C8.77248 5.7518 8.61319 5.71662 8.45832 5.7439L5.53868 6.25932C5.94936 5.77393 6.41419 5.33116 6.9319 4.93487C8.49413 3.73905 10.3597 3.10702 12.327 3.10702C15.1269 3.10702 17.7048 4.37684 19.3997 6.59078C20.8437 8.47697 21.4666 10.8127 21.1539 13.1675C20.8411 15.5224 19.63 17.6145 17.7437 19.0584C16.1771 20.2577 14.3144 20.8916 12.3572 20.8916C11.9622 20.8916 11.5618 20.865 11.1669 20.8126C8.81208 20.4999 6.71996 19.2889 5.27599 17.4025C4.39708 16.2545 3.80641 14.8998 3.56775 13.485C3.54158 13.33 3.45486 13.1917 3.32672 13.1005C3.19865 13.0094 3.03944 12.973 2.88442 12.999L1.32542 13.262C1.00257 13.3165 0.785022 13.6224 0.83941 13.9453C1.15269 15.8026 1.92709 17.5797 3.07897 19.0844C4.97211 21.5575 7.71515 23.1453 10.8025 23.5554C11.3191 23.624 11.8433 23.6588 12.3605 23.6588C14.9286 23.6588 17.3716 22.8276 19.4253 21.2554C21.8985 19.3623 23.4863 16.6192 23.8964 13.5317C24.3067 10.4443 23.4899 7.38194 21.5966 4.90886Z'
-																fill='white'
-															/>
-														</g>
-														<defs>
-															<clipPath id='clip0_438_3037'>
-																<rect width='24' height='24' fill='white' />
-															</clipPath>
-														</defs>
-													</svg>
-												</button>
-											</div>
-										</>
-									)}
-									{inputSecond && (
-										<>
-											<div className='popupTasks__walletTask-title'>
-												<span>Current wallet</span>
-											</div>
-											<div className='popupTasks__walletTask-input'>
-												<input type='text' value={walletVaL} disabled />
-												<button
-													className='popupTasks__walletTask-inputBtn'
-													onClick={resetWalletEnabler}
-													disabled={resetBtnDisabled === true}
-												>
-													<svg
-														width='24'
-														height='24'
-														viewBox='0 0 24 24'
-														fill='none'
-														xmlns='http://www.w3.org/2000/svg'
-													>
-														<g clip-path='url(#clip0_5228_4127)'>
-															<path
-																d='M21.5966 4.90886C19.3742 2.00582 15.9949 0.34082 12.3252 0.34082C9.74522 0.34082 7.2987 1.16969 5.24998 2.73793C4.50871 3.30544 3.83811 3.96166 3.2543 4.68594L2.73374 1.73736C2.67675 1.41491 2.36892 1.19925 2.04678 1.25656L0.48984 1.53135C0.334977 1.5587 0.197346 1.64645 0.107148 1.77523C0.0169488 1.90408 -0.0183086 2.06337 0.00904354 2.21824L1.2459 9.22457C1.29673 9.51217 1.54685 9.71454 1.82907 9.71454C1.8633 9.71454 1.898 9.71154 1.93286 9.70537L8.93928 8.46852C9.26173 8.4116 9.47699 8.10408 9.42008 7.78163L9.14521 6.22469C9.11786 6.06983 9.03019 5.9322 8.90133 5.842C8.77248 5.7518 8.61319 5.71662 8.45832 5.7439L5.53868 6.25932C5.94936 5.77393 6.41419 5.33116 6.9319 4.93487C8.49413 3.73905 10.3597 3.10702 12.327 3.10702C15.1269 3.10702 17.7048 4.37684 19.3997 6.59078C20.8437 8.47697 21.4666 10.8127 21.1539 13.1675C20.8411 15.5224 19.63 17.6145 17.7437 19.0584C16.1771 20.2577 14.3144 20.8916 12.3572 20.8916C11.9622 20.8916 11.5618 20.865 11.1669 20.8126C8.81208 20.4999 6.71996 19.2889 5.27599 17.4025C4.39708 16.2545 3.80641 14.8998 3.56775 13.485C3.54158 13.33 3.45486 13.1917 3.32672 13.1005C3.19865 13.0094 3.03944 12.973 2.88442 12.999L1.32542 13.262C1.00257 13.3165 0.785022 13.6224 0.83941 13.9453C1.15269 15.8026 1.92709 17.5797 3.07897 19.0844C4.97211 21.5575 7.71515 23.1453 10.8025 23.5554C11.3191 23.624 11.8433 23.6588 12.3605 23.6588C14.9286 23.6588 17.3716 22.8276 19.4253 21.2554C21.8985 19.3623 23.4863 16.6192 23.8964 13.5317C24.3067 10.4443 23.4899 7.38194 21.5966 4.90886Z'
-																fill='white'
-															/>
-														</g>
-														<defs>
-															<clipPath id='clip0_5228_4127'>
-																<rect width='24' height='24' fill='white' />
-															</clipPath>
-														</defs>
-													</svg>
-												</button>
-											</div>
-										</>
-									)}
-									<div className='popupTasks__walletTask-box'>
-										<div className='popupTasks__walletTask-right'>
-											<div className='popupTasks__walletTask-rightHint'>
-												<span>*it can be done once every 3 days</span>
-											</div>
-										</div>
-										{!user?.wallet_address ? (
-											<div className='popupTasks__walletTask-left'>
-												<p>+20000</p>
-											</div>
-										) : (
-											''
-										)}
-									</div>
-								</div>
 								<div className='popupTasks__task'>
 									<button onClick={twitterClick} disabled={twitterTaskStatus === 1}>
 										<span>

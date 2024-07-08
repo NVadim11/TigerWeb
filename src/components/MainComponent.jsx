@@ -1,8 +1,5 @@
 import AOS from 'aos';
-import moment from 'moment-timezone';
-import { useEffect, useRef, useState } from 'react';
-import { useGetUserByTgIdQuery } from '../services/phpService';
-
+import { useContext, useEffect, useRef, useState } from 'react';
 import avatar from '../img/avatar.webp';
 import back1 from '../img/back1.webp';
 import back2 from '../img/back2.webp';
@@ -17,7 +14,7 @@ import tigranCash from '../img/tigranCash.gif';
 import tigranChill from '../img/tigranChill.gif';
 import tigranGold from '../img/tigranGold.gif';
 import tigranCircle from '../img/tigran_circle.webp';
-
+import { AuthContext } from '../store';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import MainContent from './MainContent/MainContent';
@@ -25,67 +22,12 @@ import Preloader from './Preloader/Preloader';
 import DynamicScreen from './Screens/DynamicScreen/DynamicScreen';
 
 const MainComponent = () => {
-	const tg = window.Telegram.WebApp;
-	const initData = tg.initDataUnsafe;
-	const userId = initData?.user?.id;
-	const [skip, setSkip] = useState(true);
-	const { data: user } = useGetUserByTgIdQuery(userId, {
-		skip: skip,
-		pollingInterval: 10000,
-	});
+	const { user } = useContext(AuthContext);
 	const [preloaderLoaded, setPreloaderLoaded] = useState(false);
 	const imagesRef = useRef([]);
 
 	const secretURL = process.env.REACT_APP_REGISTER_KEY;
 	const testURL = process.env.REACT_APP_TEST_URL;
-
-	useEffect(() => {
-		const registerUser = async () => {
-			try {
-				const body = {
-					query_id: initData?.query_id,
-					user: {
-						id: initData?.user.id,
-						is_bot: initData?.user.is_bot,
-						first_name: initData?.user.first_name,
-						last_name: initData?.user.last_name,
-						username: initData?.user.username,
-						language_code: initData?.user.language_code,
-					},
-					auth_date: initData?.auth_date,
-					hash: initData?.hash,
-					timezone: moment.tz.guess(), // Automatically get the user's timezone
-				};
-
-				// Conditionally add parent_id_telegram
-				if (initData?.start_param) {
-					body.parent_id_telegram = initData.start_param;
-				}
-
-				const response = await fetch(`${secretURL}/register`, {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify(body),
-				});
-
-				if (!response.ok) {
-					throw new Error('Network response was not ok');
-				}
-
-				const data = await response.json();
-			} catch (error) {
-				console.error('Error:', error);
-			}
-		};
-
-		if (!user) {
-			registerUser();
-		} else {
-			console.log('No user data available');
-		}
-	}, [initData, user, secretURL]);
 
 	useEffect(() => {
 		const loadImage = (src) => {
@@ -144,12 +86,6 @@ const MainComponent = () => {
 		loadImages();
 	}, [user]);
 
-	useEffect(() => {
-		if (tg && userId) {
-			setSkip(false);
-		}
-	}, [tg, userId]);
-
 	// Detecting if the application is opened from a mobile device
 	const isMobileDevice =
 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
@@ -168,11 +104,11 @@ const MainComponent = () => {
 			{/* <Preloader loaded={preloaderLoaded} /> */}
 			{!user ? (
 				<>
-					<Header user={user} />
+					<Header />
 					<main id='main' className='main'>
-						<MainContent user={user} />
+						<MainContent />
 					</main>
-					<Footer user={user} />
+					<Footer />
 				</>
 			) : (
 				<DynamicScreen variant={variant} />

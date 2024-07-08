@@ -1,5 +1,6 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
+import { createContext } from "react"
 import { adminApi } from './services'
 import { phpApi } from './services/phpService'
 
@@ -18,6 +19,11 @@ export const store = configureStore({
 			phpApi.middleware,
 			adminApi.middleware,
 		]),
+});
+
+export const AuthContext = createContext({
+  user: null,
+  setUser: () => {},
 });
 
 // optional, but required for refetchOnFocus/refetchOnReconnect behaviors
