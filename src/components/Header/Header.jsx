@@ -6,6 +6,7 @@ import crown from '../../img/crown.svg';
 import lead_icon from '../../img/leaderboard.webp';
 import ref_icon from '../../img/referral.webp';
 import { useGetLeaderboardMutation } from '../../services/phpService';
+import TonConnectStatus from '../../TonConnectStatus';
 import './Header.scss';
 
 const Header = ({ user }) => {
@@ -153,7 +154,7 @@ const Header = ({ user }) => {
 				<div className='header__logo'>
 					<img src={face} alt='Tigran-logo' />
 				</div>
-
+				<TonConnectStatus />
 				<div className='header__btn-group'>
 					<div className='header__social-links'>
 						<a
