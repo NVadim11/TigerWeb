@@ -9,7 +9,7 @@ function App() {
   return (
     <>
     	<Provider store={store}>
-        <TonConnectUIProvider manifestUrl="http://localhost:60024/tonconnect-manifest.json">
+        <TonConnectUIProvider manifestUrl="https://web.temka.pro/tonconnect-manifest.json">
           <AppRouter />
         </TonConnectUIProvider>
       </Provider>

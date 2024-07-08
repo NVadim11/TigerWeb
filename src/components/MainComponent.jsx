@@ -21,6 +21,7 @@ import tigranCircle from '../img/tigran_circle.webp';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import MainContent from './MainContent/MainContent';
+import Preloader from './Preloader/Preloader';
 import DynamicScreen from './Screens/DynamicScreen/DynamicScreen';
 
 const MainComponent = () => {

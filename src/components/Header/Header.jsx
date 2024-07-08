@@ -6,7 +6,7 @@ import crown from '../../img/crown.svg';
 import lead_icon from '../../img/leaderboard.webp';
 import ref_icon from '../../img/referral.webp';
 import { useGetLeaderboardMutation } from '../../services/phpService';
-import TonConnectStatus from '../../TonConnectStatus';
+import { TonConnectButton, useTonConnectUI } from '@tonconnect/ui-react';
 import './Header.scss';
 
 const Header = ({ user }) => {
@@ -27,6 +27,18 @@ const Header = ({ user }) => {
 
 	const containerRef = useRef(null);
 	const menuRef = useRef(null);
+	
+	const [walletAddress, setWalletAddress] = useState(null);
+	const { wallet } = useTonConnectUI();
+
+	const handleClick = () => {
+		if (wallet) {
+		  console.log('Wallet Address:', wallet.account.address);
+		  setWalletAddress(wallet.account.address);
+		} else {
+		  console.log('No wallet connected');
+		}
+	  };
 
 	const tg = window.Telegram.WebApp;
 
@@ -154,7 +166,8 @@ const Header = ({ user }) => {
 				<div className='header__logo'>
 					<img src={face} alt='Tigran-logo' />
 				</div>
-				<TonConnectStatus />
+				<TonConnectButton onClick={handleClick}/>
+				{walletAddress && <p>Wallet Address: {walletAddress}</p>}
 				<div className='header__btn-group'>
 					<div className='header__social-links'>
 						<a
