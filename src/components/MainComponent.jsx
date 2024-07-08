@@ -16,15 +16,12 @@ import tiger_ava from '../img/tiger_ava.webp';
 import tigranCash from '../img/tigranCash.gif';
 import tigranChill from '../img/tigranChill.gif';
 import tigranGold from '../img/tigranGold.gif';
-import tigranQR from '../img/tigranQR.webp';
 import tigranCircle from '../img/tigran_circle.webp';
 
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
 import MainContent from './MainContent/MainContent';
-import Preloader from './Preloader/Preloader';
 import DynamicScreen from './Screens/DynamicScreen/DynamicScreen';
-import TelegramLinking from './Screens/QRcode/QRcode';
 
 const MainComponent = () => {
 	const tg = window.Telegram.WebApp;
@@ -114,7 +111,6 @@ const MainComponent = () => {
 			tigranCash,
 			tigranChill,
 			tigranGold,
-			tigranQR,
 		];
 
 		const loadImages = async () => {
@@ -168,26 +164,18 @@ const MainComponent = () => {
 
 	return (
 		<>
-			<>
-				{!isMobileDevice ? (
-					<TelegramLinking />
-				) : (
-					<>
-						{/* <Preloader loaded={preloaderLoaded} /> */}
-						{!user ? (
-							<>
-								<Header user={user} />
-								<main id='main' className='main'>
-									<MainContent user={user} />
-								</main>
-								<Footer user={user} />
-							</>
-						) : (
-							<DynamicScreen variant={variant} />
-						)}
-					</>
-				)}
-			</>
+			{/* <Preloader loaded={preloaderLoaded} /> */}
+			{!user ? (
+				<>
+					<Header user={user} />
+					<main id='main' className='main'>
+						<MainContent user={user} />
+					</main>
+					<Footer user={user} />
+				</>
+			) : (
+				<DynamicScreen variant={variant} />
+			)}
 		</>
 	);
 };

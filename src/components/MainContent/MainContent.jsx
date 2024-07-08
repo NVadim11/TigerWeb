@@ -5,12 +5,10 @@ import moment from 'moment-timezone';
 import React, { useEffect, useRef, useState } from 'react';
 import { useMediaQuery } from 'react-responsive';
 import energy from '../../img/energy.webp';
+import boostCoin from '../../img/tigranBoost.webp';
 import tigranCash from '../../img/tigranCash.gif';
 import tigranGold from '../../img/tigranGold.gif';
-import {
-	default as boostCoin,
-	default as tigranCircle,
-} from '../../img/tigran_circle.webp';
+import { default as tigranCircle } from '../../img/tigran_circle.webp';
 import { useUpdateBalanceMutation } from '../../services/phpService';
 import GamePaused from './GamePaused/GamePaused';
 import './MainContent.scss';
@@ -468,7 +466,7 @@ const MainContent = ({ user }) => {
 														top: `${position.y}px`,
 														cursor: 'pointer',
 														width: '150px',
-														height: '160px',
+														height: '180px',
 														borderRadius: '150px',
 														zIndex: 25,
 														...(isMedia && {
@@ -561,17 +559,11 @@ const MainContent = ({ user }) => {
 												</AnimatePresence>
 											))}
 											<div className='mainContent__imageContainer'>
-												<div className='circleElement'>
-													<div className='outerCircle'>
-														<div className='innerCircle'>
-															<img
-																src={boostPhase ? tigranGold : tigranCash}
-																draggable='false'
-																alt='Tigran idle'
-															/>
-														</div>
-													</div>
-												</div>
+												<img
+													src={boostPhase ? tigranGold : tigranCash}
+													draggable='false'
+													alt='Tigran idle'
+												/>
 											</div>
 										</div>
 									) : (
@@ -608,17 +600,11 @@ const MainContent = ({ user }) => {
 												</AnimatePresence>
 											))}
 											<div className='mainContent__imageContainer'>
-												<div className='circleElement'>
-													<div className='outerCircle'>
-														<div className='innerCircle'>
-															<img
-																src={boostPhase ? tigranGold : tigranCash}
-																draggable='false'
-																alt='Tigran active'
-															/>
-														</div>
-													</div>
-												</div>
+												<img
+													src={boostPhase ? tigranGold : tigranCash}
+													draggable='false'
+													alt='Tigran active'
+												/>
 											</div>
 										</div>
 									)}
